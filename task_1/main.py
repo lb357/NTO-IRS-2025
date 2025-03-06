@@ -31,7 +31,8 @@ writer = cv2.VideoWriter("output.avi",
 cv2.VideoWriter_fourcc(*"MJPG"), 30,(640,480))
 
 def send_to_robot(xr, yr, xt, yt, ang):
-    message = str(xr) + " " + str(yr) + " " + str(xt) + " " + str(yt) + " " + str(ang)
+    message = str(round(xr,4)) + " " + str(round(yr, 4)) + " " + str(round(xt,4)) + " " + str(round(yt,4)) + " " + str(round(ang, 4))
+    print(ang)
     sock.sendto(message.encode('utf-8'), (target_ip, target_port))
     #print(f"Message sent to {target_ip}:{target_port}")
     #sock.settimeout(0.0)
@@ -46,7 +47,7 @@ try:
     load_dotenv(".env")
     from nto.final import Task
 except Exception as err:
-    pass
+    print(err)
 
 
 
@@ -118,13 +119,13 @@ with open('param.txt') as f:
 
 if __name__ == "__main__":
     while True:
-        try:
-            task = Task()
-            task.start(stage=1, task_id=int(input("task id: ")))
-            task_data = task.getTask()
-        except Exception:
-            input("task id: ")
-            task_data = [{"cargo_id": 10}, {"cargo_id": 5}]
+        #try:
+        task = Task()
+        task.start(stage=1, task_id=int(input("task id: ")))
+        task_data = task.getTask()
+        #except Exception as error:
+        #    print(error)
+         #   task_data = [{"cargo_id": 10}, {"cargo_id": 5}]
         segmented = False
         unloading_ready = False
         print(task_data)
