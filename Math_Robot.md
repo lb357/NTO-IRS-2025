@@ -25,8 +25,8 @@
 
 | Колесо | Скорость, м/с |
 | --- | --- |
-| `Левого колеса` | List all *new or modified* files |
-| `Правого колеса` | Show file differences that **haven't been** staged |
+| `Левое колесо` | List all *new or modified* files |
+| `Правое колесо` | Show file differences that **haven't been** staged |
 
 *Таблица 2. Значения зависимости скорости от ШИМ.*
 
