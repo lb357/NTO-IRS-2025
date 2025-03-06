@@ -175,14 +175,14 @@ if __name__ == "__main__":
                 zones_coords = {}
                 cargos_coords = {}
                 robots_coords = {}
+                small_cargos_coords = {}
+                big_cargos_coords = {}
 
             else:
                 roadmask = task_mask.copy()
 
                 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 corners, ids, _ = detector.detectMarkers(gray)
-                small_cargos_coords = {}
-                big_cargos_coords = {}
                 temp_coords = {}
                 for i in range(len(ids)):
                     idx = ids[i][0]
