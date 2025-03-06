@@ -21,8 +21,13 @@ class Robot:
         elif left_voltage < 0 <= right_voltage:
             orientation = 3
 
-        left_motor = abs(left_voltage) if abs(left_voltage) <= 255 else 255
-        right_motor = abs(right_voltage) if abs(right_voltage) <= 255 else 255
+        s_max = 150
+        s_min = 100
+        left_motor = abs(left_voltage) if abs(left_voltage) <= s_max else s_max
+        right_motor = abs(right_voltage) if abs(right_voltage) <= s_max else s_max
+        left_motor = abs(left_voltage) if abs(left_voltage) >= s_min else s_min
+        right_motor = abs(right_voltage) if abs(right_voltage) >= s_min else s_min
+        print(left_motor, right_motor)
         message = struct.pack("BBB", left_motor, right_motor, orientation)
 
         return message
