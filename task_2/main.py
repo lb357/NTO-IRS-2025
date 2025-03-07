@@ -248,7 +248,7 @@ while True:
                                                                robots_coords[ROBOT_1_IDX][4],
                                                                cM, dC)
                 real_robot_x, real_robot_y = real_robot[0][0], real_robot[1][0]
-                if cv2.arcLength(robot_path) <= ROADMASK_OR*1.5:
+                if len(robot_path) <= 3 and distance(*robot_center, *cargo_center) < ROADMASK_OR:#cv2.arcLength(robot_path) <= ROADMASK_OR*1.5:
                     real_path, _ = pr3d.get_xy_from_z_perspective(*cargo_center,
                                                                   robots_coords[ROBOT_1_IDX][4],
                                                                   cM, dC)
