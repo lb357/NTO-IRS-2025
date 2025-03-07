@@ -1,6 +1,6 @@
 # NTO-IRS-2025
 Репозиторий решения заданий финала НТО ИРС 2025 команды "План Б -которого нет-"
-Repository of solutions to the tasks of the final stage of the final stage of STO IRS 2025 of the "План Б -которого нет-" team
+Repository of solutions to the tasks of the final stage of the final stage of NTO IRS 2025 of the "План Б -которого нет-" team
 
 **<h1>Математика робота</h1>**
 Одной из главных задач для решения всех 3 этапов является управление роботом. Для управления роботом были использовали следующие методы: feed forward, двойной П-регулятор. 
