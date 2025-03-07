@@ -228,6 +228,7 @@ def solve():
 
 ![image](https://github.com/user-attachments/assets/31e8a5ae-e07e-4364-bcf6-5872769b1e83)
 *Рис. 7. Регулятор на основе функции Ляпунова*
+
 ```python
 def lyapunov_calcvelocity(current_x, current_y, target_x, target_y, current_theta):
     max_speed = 255
@@ -244,7 +245,7 @@ def lyapunov_calcvelocity(current_x, current_y, target_x, target_y, current_thet
 
 ```
 	
-	не использовано из-за торчащего из робоплатформы кабеля (при езде задним ходом могут быть случайные касания дргуих грузов)
+не использовано из-за торчащего из робоплатформы кабеля (при езде задним ходом могут быть случайные касания дргуих грузов)
 
 
 **<h1>Развертывание решения<h1/>**
