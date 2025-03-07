@@ -78,7 +78,7 @@ $0,1086 = 150k + b$
 
 </details>
 
-![image](https://github.com/user-attachments/assets/f829fa8c-15b2-421b-897b-098254e7ca4d)
+![image](https://github.com/user-attachments/assets/0947e333-36de-45e8-b944-cf582ed763ed)
 *Рис. 3. График функции зависимости скорости от ШИМ правого колеса*
 
 
@@ -99,7 +99,7 @@ $0,92 = 150k + b$
 
 </details>
 
-![image](https://github.com/user-attachments/assets/1c56a8b1-754d-49c3-8556-9409ac2a87f3)
+![image](https://github.com/user-attachments/assets/b100042d-54e5-421d-81f0-257caa357ca6)
 *Рис. 3. График функции зависимости скорости от ШИМ левого колеса*
 
 | Колесо | Коэффициент |
@@ -115,15 +115,18 @@ $0,92 = 150k + b$
 
 
 ![image](https://github.com/user-attachments/assets/427d3946-0980-4e5c-ac82-72490a4048ae)
-Рис. П-регулятор 
+*Рис. 6. П-регулятор*
 
 ![image](https://github.com/user-attachments/assets/31e8a5ae-e07e-4364-bcf6-5872769b1e83)
-Рис. Регулятор функции Ляпунова
+*Рис. 7. Регулятор функции Ляпунова*
 
 ![image](https://github.com/user-attachments/assets/21592372-d9f4-4a50-96da-e374663f6229)
-Рис. 
+*Рис. 8.*
 
 ![image](https://github.com/user-attachments/assets/6e8463fa-b53d-4dc7-bfa7-f5a9311a1516)
-Рис. 
+*Рис. 9.*
+
+![image](https://github.com/user-attachments/assets/d4508280-f7a1-4794-8627-53c6efef484f)
+*Рис. 10.*
 
 P.S. @koipaqwe :+1: крутой md-файл! - я считаю, что слей :shipit:
