@@ -124,9 +124,11 @@ $0,92 = 150k + b$
 *Рис. 8.*
 
 ![image](https://github.com/user-attachments/assets/6e8463fa-b53d-4dc7-bfa7-f5a9311a1516)
+
 *Рис. 9.*
 
 ![image](https://github.com/user-attachments/assets/d4508280-f7a1-4794-8627-53c6efef484f)
+
 *Рис. 10.*
 
 P.S. @koipaqwe :+1: крутой md-файл! - я считаю, что слей :shipit:
