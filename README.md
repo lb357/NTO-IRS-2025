@@ -113,12 +113,33 @@ $0,92 = 150k + b$
 ![image](https://github.com/user-attachments/assets/3faa370e-38a6-4ca1-b4cf-3d692259cdd3)
 *Рис. 5. Схема коммуникации между агентами*
 
+**<h1>управление роботом с помощью регулятора, созданного на основе функции Ляпунова<h1/>**
+
+	![image](https://github.com/user-attachments/assets/31e8a5ae-e07e-4364-bcf6-5872769b1e83)
+*Рис. 7. Регулятор функции Ляпунова*
+```
+def lyapunov_calcvelocity(current_x, current_y, target_x, target_y, current_theta):
+    max_speed = 255
+    k2 = 10
+    # Изменяем знак для Y-координаты, чтобы преобразовать в обычную систему
+    normalized_x = (target_x - current_x) * 100
+    normalized_y = (current_y - target_y) * 100  # Инвертируем разницу по Y
+    # Дальнейшие вычисления остаются без изменений
+    angle_error = math.atan2(normalized_y, normalized_x) - current_theta
+    dist = (normalized_x**2 + normalized_y**2)**0.5
+    linear_speed = max_speed * math.tanh(dist) * math.cos(angle_error)
+    angle_speed = (max_speed * math.tanh(dist) * math.cos(angle_error) * math.sin(angle_error)) / dist + k2 * angle_error
+    return [linear_speed, angle_speed]
+
+```
+	
+	не использовано из-за торчащего из робоплатформы кабеля (при езде задним ходом могут быть случайные касания дргуих грузов)
+
 
 ![image](https://github.com/user-attachments/assets/427d3946-0980-4e5c-ac82-72490a4048ae)
 *Рис. 6. П-регулятор*
 
-![image](https://github.com/user-attachments/assets/31e8a5ae-e07e-4364-bcf6-5872769b1e83)
-*Рис. 7. Регулятор функции Ляпунова*
+
 
 **<h1>Компьютерное зрение, поиск пути и решение заданий финала </h1>**
 Работа с камерой и получение заданий осуществляется по HTTP в соответствии с инструкциями предоставленными организаторами.
