@@ -1,13 +1,15 @@
 import struct
 import serial
 
-
+# Класс для управления роботом
 class Robot:
+    # Подключение Raspberry Pi к мобильной платформе
     def __init__(self, serial_port='/dev/ttyUSB0', baudrate=9600):
         if serial_port is None:
             raise ValueError("Для serial-режима необходимо указать serial_port")
         self.ser = serial.Serial(serial_port, baudrate, timeout=1)
 
+    # Функция для перевода ШИМ сигнала в байты
     @staticmethod
     def voltage_to_bytes_msg(left_voltage: int, right_voltage: int) -> bytes:
         orientation = 0
@@ -32,6 +34,7 @@ class Robot:
 
         return message
 
+    # Отправление ШИМ сигнала на платформу
     def send_voltage(self, left_voltage: int, right_voltage: int):
         message = self.voltage_to_bytes_msg(left_voltage, right_voltage)
         self.ser.write(message)
