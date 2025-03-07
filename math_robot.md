@@ -68,5 +68,7 @@ $0?1086 = 150k +b$
 
 *Таблица 4. Коэффициенты колёс*
 
+> [!TIP]
+> Helpful advice for doing things better or more easily.
 
 P.S. @koipaqwe :+1: крутой md-файл! - я считаю, что слей :shipit:
