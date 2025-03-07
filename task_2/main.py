@@ -85,8 +85,12 @@ def mass_center(contour, is_rounded: bool = True):
         return None
 
 task = Task()
-task.start(stage=2, task_id=int(sinput("Task id: ", "1")))
-task_json = task.getTask()
+try:
+    task.start(stage=2, task_id=int(sinput("Task id: ", "1")))
+    task_json = task.getTask()
+except Exception as err:
+    print(err)
+    task_json = [{"storage_zone": "", "cargo_id": 7}]
 #task_json = [{"unloading_zone": "42", "cargo_id": 18}]
 print(task_json)
 video_stream = cv2.VideoCapture(CAMERA)
@@ -116,13 +120,13 @@ while True:
         storage_contours_est = camutil.getInsideContours(storage_outmask, storage_inmask, True, 2)
         storage_mask = np.zeros(storage_outmask.shape, dtype=np.uint8)
         for oc, ic in storage_contours_est:
+            oc = oc.reshape((len(oc), 2))
             storage_mask = cv2.drawContours(storage_mask, [oc], -1, (255, 255, 255), thickness=-1)
         storage_mask = camutil.applyOpen(storage_mask, 10)
         storage_mask = camutil.fillMaskContours(storage_mask, -1, True)
         storage_contours, storage_hierarchy = cv2.findContours(storage_mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         for i in range(len(storage_contours)):
             storage_zones[i] = mass_center(storage_contours[i])
-
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         corners, ids, _ = detector.detectMarkers(gray)
         for i in range(len(ids)):
@@ -131,7 +135,10 @@ while True:
             if idx in UNLOADING_ZONES_IDX:
                 unloading_zones[idx] = mass_center(mcor)
         segmented = True
+        storage_mask_ = storage_mask.copy()
+        roadmask_robot = task_mask.copy()
     else:
+        storage_mask = storage_mask_.copy()
         _, frame = video_stream.read()
         _, W, H = frame.shape[::-1]
         img = cv2.undistort(frame, cM, dC)
@@ -172,10 +179,14 @@ while True:
                                                                            rvec, tvec, cM, dC)
                         py, _, px = camera_2d_points.shape
                         camera_2d_points = camera_2d_points.reshape(py, px, 1)
-                        #storage_mask = cv2.drawContours(storage_mask, camera_2d_points, -1, (75, 100, 150), -1)
+                        camera_2d_points = camera_2d_points.astype(np.int16)
+                        camera_2d_points = camera_2d_points.reshape((len(camera_2d_points), 2))
+                        for p in camera_2d_points:
+                            task_mask = cv2.circle(task_mask, p, round(ROADMASK_OR*1), (0, 0, 0), -1)
 
 
         if len(task_json) == 0:
+            send_to_robot(0, 0, 0, 0, 0, sock, ROBOT_IP, ROBOT_PORT)
             print("Finish!")
             break
         else:
@@ -186,7 +197,7 @@ while True:
             else:
                 zone_idx = min(storage_zones.keys())
                 zone_with_idx = False
-        print(unloading_zones, storage_zones, zone_idx)
+
         if (cargo_idx in small_cargos) and (zone_idx in unloading_zones or zone_idx in storage_zones) :
             cargo_center = small_cargos[cargo_idx]
             if zone_with_idx:
@@ -194,13 +205,12 @@ while True:
             else:
                 zone_center = storage_zones[zone_idx]
 
-            print(cargo_center, zone_center)
             roadmask_cargo = task_mask.copy()
             roadmask_robot = task_mask.copy()
             for cargo in small_cargos:
                 if cargo != cargo_idx:
                     roadmask_cargo = cv2.circle(roadmask_cargo, small_cargos[cargo], ROADMASK_OR, (0, 0, 0), -1)
-                roadmask_robot = cv2.circle(roadmask_robot, small_cargos[cargo], ROADMASK_OR, (0, 0, 0), -1)
+                roadmask_robot = cv2.circle(roadmask_robot, small_cargos[cargo], round(ROADMASK_OR*1.25), (0, 0, 0), -1)
             roadmap_cargo = planner.get_roadmap_from_mask(roadmask_cargo, 16, (0, 0), (W, H))
             roadmap_robot = planner.get_roadmap_from_mask(roadmask_robot, 16, (0, 0), (W, H))
 
@@ -227,7 +237,7 @@ while True:
                                                        planner.get_nearest_node(collider_center, roadmap_robot),
                                                        method="bellman-ford"))
                 robot_path = planner.end_path(robot_center, collider_center, robot_path)
-                robot_path = cv2.approxPolyDP(robot_path, 12, False)
+                robot_path = cv2.approxPolyDP(robot_path, 8, False)
                 robot_path = robot_path.reshape((len(robot_path), 2)).tolist()
                 # D
                 for i in range(1, len(robot_path)):
@@ -238,7 +248,7 @@ while True:
                                                                robots_coords[ROBOT_1_IDX][4],
                                                                cM, dC)
                 real_robot_x, real_robot_y = real_robot[0][0], real_robot[1][0]
-                if len(robot_path) <= 3 and distance(*robot_center, *cargo_center) < ROADMASK_OR:
+                if cv2.arcLength(robot_path) <= ROADMASK_OR*1.5:
                     real_path, _ = pr3d.get_xy_from_z_perspective(*cargo_center,
                                                                   robots_coords[ROBOT_1_IDX][4],
                                                                   cM, dC)
@@ -269,5 +279,6 @@ while True:
         #for p in roadmap_robot:
         #    imh=cv2.circle(img, p, 1, (0, 255, 0), -1)
         cv2.imshow("d", img)
+        cv2.imshow("s", roadmask_robot)
         #print(robots_coords)
         cv2.waitKey(1)
