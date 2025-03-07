@@ -112,7 +112,7 @@ $0,92 = 150k + b$
 
 ![image](https://github.com/user-attachments/assets/3faa370e-38a6-4ca1-b4cf-3d692259cdd3)
 *Рис. 5. Схема коммуникации между агентами*
-```
+```python
 import struct
 import serial
 
@@ -158,7 +158,7 @@ class Robot:
 ![image](https://github.com/user-attachments/assets/427d3946-0980-4e5c-ac82-72490a4048ae)
 *Рис. 6. П-регулятор*
 
-```
+```python
 def get_pos_delta(xc, yc, xt, yt, th):
     p = sqrt((xt-xc)**2 + (yt-yc)**2)
     a = atan2(yt-yc, xt-xc) - th
@@ -228,7 +228,7 @@ def solve():
 
 ![image](https://github.com/user-attachments/assets/31e8a5ae-e07e-4364-bcf6-5872769b1e83)
 *Рис. 7. Регулятор на основе функции Ляпунова*
-```
+```python
 def lyapunov_calcvelocity(current_x, current_y, target_x, target_y, current_theta):
     max_speed = 255
     k2 = 10
