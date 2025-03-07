@@ -112,7 +112,114 @@ $0,92 = 150k + b$
 
 ![image](https://github.com/user-attachments/assets/3faa370e-38a6-4ca1-b4cf-3d692259cdd3)
 *Рис. 5. Схема коммуникации между агентами*
+```
+import struct
+import serial
 
+# Класс для управления роботом
+class Robot:
+    # Подключение Raspberry Pi к мобильной платформе
+    def __init__(self, serial_port='/dev/ttyUSB0', baudrate=9600):
+        if serial_port is None:
+            raise ValueError("Для serial-режима необходимо указать serial_port")
+        self.ser = serial.Serial(serial_port, baudrate, timeout=1)
+
+    # Функция для перевода ШИМ сигнала в байты
+    @staticmethod
+    def voltage_to_bytes_msg(left_voltage: int, right_voltage: int) -> bytes:
+        orientation = 0
+
+        if left_voltage < 0 and right_voltage < 0:
+            orientation = 1
+
+        elif left_voltage >= 0 > right_voltage:
+            orientation = 2
+
+        elif left_voltage < 0 <= right_voltage:
+            orientation = 3
+
+        s_max = 150
+        s_min = 100
+        left_motor = abs(left_voltage) if abs(left_voltage) <= s_max else s_max
+        right_motor = abs(right_voltage) if abs(right_voltage) <= s_max else s_max
+        left_motor = abs(left_voltage) if abs(left_voltage) >= s_min else s_min
+        right_motor = abs(right_voltage) if abs(right_voltage) >= s_min else s_min
+        print(left_motor, right_motor)
+        message = struct.pack("BBB", left_motor, right_motor, orientation)
+
+        return message
+
+    # Отправление ШИМ сигнала на платформу
+    def send_voltage(self, left_voltage: int, right_voltage: int):
+        message = self.voltage_to_bytes_msg(left_voltage, right_voltage)
+        self.ser.write(message)
+```
+
+![image](https://github.com/user-attachments/assets/427d3946-0980-4e5c-ac82-72490a4048ae)
+*Рис. 6. П-регулятор*
+
+```
+def get_pos_delta(xc, yc, xt, yt, th):
+    p = sqrt((xt-xc)**2 + (yt-yc)**2)
+    a = atan2(yt-yc, xt-xc) - th
+    if a > pi:
+        a = a - 2*pi
+    if a < -pi:
+        a = a + 2*pi
+    return p, a
+
+
+def get_wheel_const(p, a, k1, k2, k3):
+    if abs(a) >= k1:
+        return -a * k2, a * k2
+    else:
+        return p * k3, p * k3
+
+
+def clamp_v(v, min_v, max_v, kc=2):
+    if v < -min_v / kc:
+        return max(-max_v, min(v, -min_v))
+    elif v > min_v / kc:
+        return max(min_v, min(v, max_v))
+    else:
+        return 0
+
+def solve():
+    UDP_IP = "0.0.0.0"
+    UDP_PORT = 5005
+    robot = Robot()
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind((UDP_IP, UDP_PORT))
+
+    while True:
+        data, addr = sock.recvfrom(1024)
+        message = data.decode('utf-8')
+        try:
+            xr, yr, xt, yt, ang = map(float, message.split())
+            a, p = get_pos_delta(xr, yr, xt, yt, ang)
+            print("Получены данные")
+            if p <= 0.1:
+                robot.send_voltage(0, 0)
+                continue
+            kl, kr = 0.0003, 0.00044
+            ka, kd = 1, 1
+            const = 15 * pi / 180
+
+            if abs(a) >= const:
+                vr = ka * a
+                vl = -ka * a
+            else:
+                vr = kd * p
+                vl = kd * p
+
+            sl = int(vl / kl)
+            sr = int(vr / kr)
+            robot.send_voltage(sl, sr)
+
+        except Exception as error:
+            print(error)
+```
 
 **<h1>управление роботом с помощью регулятора, созданного на основе функции Ляпунова<h1/>**
 
