@@ -113,10 +113,14 @@ $0,92 = 150k + b$
 ![image](https://github.com/user-attachments/assets/3faa370e-38a6-4ca1-b4cf-3d692259cdd3)
 *Рис. 5. Схема коммуникации между агентами*
 
+
 **<h1>управление роботом с помощью регулятора, созданного на основе функции Ляпунова<h1/>**
 
-	![image](https://github.com/user-attachments/assets/31e8a5ae-e07e-4364-bcf6-5872769b1e83)
-*Рис. 7. Регулятор функции Ляпунова*
+![image](https://github.com/user-attachments/assets/427d3946-0980-4e5c-ac82-72490a4048ae)
+*Рис. 6. Схема кинематики робота*
+
+![image](https://github.com/user-attachments/assets/31e8a5ae-e07e-4364-bcf6-5872769b1e83)
+*Рис. 7. Регулятор на основе функции Ляпунова*
 ```
 def lyapunov_calcvelocity(current_x, current_y, target_x, target_y, current_theta):
     max_speed = 255
@@ -134,11 +138,6 @@ def lyapunov_calcvelocity(current_x, current_y, target_x, target_y, current_thet
 ```
 	
 	не использовано из-за торчащего из робоплатформы кабеля (при езде задним ходом могут быть случайные касания дргуих грузов)
-
-
-![image](https://github.com/user-attachments/assets/427d3946-0980-4e5c-ac82-72490a4048ae)
-*Рис. 6. П-регулятор*
-
 
 
 **<h1>Компьютерное зрение, поиск пути и решение заданий финала </h1>**
